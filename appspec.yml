@@ -1,0 +1,25 @@
+version: 0.0
+os: linux
+runas: root
+
+files:
+  - source: /
+    destination: /home/ubuntu/node-application/
+    overwrite: true
+files_exists_behaviour: OVERWRITE
+
+hooks:
+  BeforeInstall:
+    - location: script/install.sh
+      timeout: 300
+      runas: root
+      
+  ApplicationStop:
+    - location: script/stop.sh
+      timeout: 300
+      runas: root
+  
+  ApplicationStart:
+    - location: script/start.sh
+      timeout: 300
+      runas: root
