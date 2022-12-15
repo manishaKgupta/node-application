@@ -1,25 +1,27 @@
-version: 0.0
-os: linux
-runas: root
-
-files:
-  - source: /
-    destination: /home/ubuntu/nodejs/
-    overwrite: true
-files_exists_behaviour: OVERWRITE
-
-hooks:
-  BeforeInstall:
-    - location: script/install.sh
-      timeout: 300
-      runas: root
+version: 0.2
+env:
+  secrets-manager:
+    MONGODB_URL: "MANISHA_MONGO_SECRET:mongodb_url"
+    
+phases: 
+  pre_build:
+    commands: 
+      - sudo apt update && sudo apt upgrade -y
+      - sudo curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+      - sudo apt install nodejs nginx -y
+      - sudo npm install pm2@latest -g
+      - echo Build started on `date`
+      - echo "MONGODB_URL_MANISHA=$MONGODB_URL" > .env
       
-  ApplicationStop:
-    - location: script/stop.sh
-      timeout: 300
-      runas: root
-  
-  ApplicationStart:
-    - location: script/start.sh
-      timeout: 300
-      runas: root
+  build:
+    commands: 
+      - npm install
+      - npm install --save dotenv
+      
+  post_build:
+    commands: 
+      - echo Build completed on `date`
+      
+artifacts:
+  files:
+    - '**/*'
