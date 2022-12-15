@@ -1,24 +1,25 @@
-version: 0.2
+version: 0.0
+os: linux
+runas: root
 
-run-as: root
+files:
+  - source: /
+    destination: /home/ubuntu/nodejs/
+    overwrite: true
+files_exists_behaviour: OVERWRITE
 
-
-phases:
-   pre_build:
-     commands:
-       - sudo apt update && sudo apt upgrade -y
-       - sudo curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-       - sudo apt install nodejs nginx -y
-       - sudo npm install npm@latest -g
-       - sudo npm install pm2@latest -g
-       - echo "manisha-mongodb-url=$manisha-mongodb-url" > .env
-
-   build:
-     commands:
-        - echo "build application"
-       
-
-artifacts:
-  files:
-    - echo "Upload artifact to bucket for deploy"
-    - '**/*'
+hooks:
+  BeforeInstall:
+    - location: script/install.sh
+      timeout: 300
+      runas: root
+      
+  ApplicationStop:
+    - location: script/stop.sh
+      timeout: 300
+      runas: root
+  
+  ApplicationStart:
+    - location: script/start.sh
+      timeout: 300
+      runas: root
