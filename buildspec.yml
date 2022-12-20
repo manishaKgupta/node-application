@@ -6,10 +6,6 @@ env:
 phases: 
   pre_build:
     commands: 
-      - sudo apt update && sudo apt upgrade -y
-      - sudo curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-      - sudo apt install nodejs nginx -y
-      - sudo npm install pm2@latest -g
       - echo Build started on `date`
       - echo "MONGODB_URL_MANISHA=$MONGODB_URL" > .env
       
