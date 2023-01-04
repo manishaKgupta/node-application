@@ -5,7 +5,7 @@ cd /home/ubuntu/node-application/
 #sudo pm2 stop app.js
 
 //Check if node process is running and then kill if exixts
-set -e
+
 node_id=`ps -aef | grep .pm2 | awk '{print $2}'`
 if [ !-z "$node_id"]
    then
